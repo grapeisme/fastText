@@ -3,9 +3,12 @@
 fastText is a library for efficient learning of word representations and sentence classification.
 
 ## My changes
-add calc-sentence-sim
-usage: echo –e “中国队\t国足” | ./fasttext calc-sentence-sim XXX.bin
+add calc-sentence-sim.
 
+usage: 
+```
+$ echo –e “中国队\t国足” | ./fasttext calc-sentence-sim XXX.bin
+```
 ## Requirements
 
 **fastText** builds on modern Mac OS and Linux distributions.
