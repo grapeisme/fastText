@@ -75,6 +75,8 @@ class FastText {
         std::vector<std::pair<real, std::string>>&) const;
     void wordVectors();
     void sentenceVectors();
+    void getSentenceVector(Vector& svec, const std::string& sentence);
+    real calcSentenceSim(const std::string& s1, const std::string& s2);
     void ngramVectors(std::string);
     void textVectors();
     void printWordVectors();

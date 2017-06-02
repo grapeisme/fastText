@@ -10,7 +10,6 @@
 #include <iostream>
 
 #include "fasttext.h"
-#include "args.h"
 
 using namespace fasttext;
 
@@ -27,6 +26,7 @@ void printUsage() {
     << "  cbow                    train a cbow model\n"
     << "  print-word-vectors      print word vectors given a trained model\n"
     << "  print-sentence-vectors  print sentence vectors given a trained model\n"
+    << "  calc-sentence-sim       calc sentence similarity\n"
     << "  nn                      query for nearest neighbors\n"
     << "  analogies               query for analogies\n"
     << std::endl;
@@ -187,6 +187,26 @@ void printSentenceVectors(int argc, char** argv) {
   exit(0);
 }
 
+void calcSentenceSim(int argc, char** argv) {
+    if (argc != 3) {
+        exit(EXIT_FAILURE);
+    }
+
+    FastText fasttext;
+    fasttext.loadModel(std::string(argv[2]));
+    std::string sentence;
+    while (std::getline(std::cin, sentence)) {
+        std::size_t pos = sentence.find('\t');
+        if (std::string::npos == pos)
+            continue;
+
+        std::string s1 = sentence.substr(0, pos);
+        std::string s2 = sentence.substr(pos + 1);
+        double  sim = fasttext.calcSentenceSim(s1, s2);
+        std::cout << sentence << "\t" << sim << std::endl;
+    }
+}
+
 void printNgrams(int argc, char** argv) {
   if (argc != 4) {
     printPrintNgramsUsage();
@@ -253,6 +273,10 @@ int main(int argc, char** argv) {
     printWordVectors(argc, argv);
   } else if (command == "print-sentence-vectors") {
     printSentenceVectors(argc, argv);
+  } else if (command == "calc-sentence-sim") {
+    if (argc > 2) {
+        calcSentenceSim(argc, argv);
+    }
   } else if (command == "print-ngrams") {
     printNgrams(argc, argv);
   } else if (command == "nn") {

@@ -384,6 +384,45 @@ void FastText::sentenceVectors() {
   }
 }
 
+void FastText::getSentenceVector(Vector& svec, const std::string& sentence) {
+  if (args_->model == model_name::sup) {    // not support sup model
+      return;
+  }
+
+  Vector vec(args_->dim);
+  std::string word;
+
+  std::istringstream iss(sentence);
+  svec.zero();
+  int32_t count = 0;
+  while(iss >> word) {
+    getVector(vec, word);
+    vec.mul(1.0 / vec.norm());
+    svec.addVector(vec);
+    count++;
+  }
+  svec.mul(1.0 / count);
+}
+
+real FastText::calcSentenceSim(const std::string& s1, const std::string& s2) {
+    Vector sv1(args_->dim);
+    Vector sv2(args_->dim);
+    getSentenceVector(sv1, s1);
+    getSentenceVector(sv2, s2);
+
+    real qn_1 = sv1.norm();
+    if (std::abs(qn_1) < 1e-8) {
+      qn_1 = 1;
+    }
+    real qn_2 = sv2.norm();
+    if (std::abs(qn_2) < 1e-8) {
+      qn_2 = 1;
+    }
+
+    real dot_v = sv1.dot(sv2);
+    return dot_v / (qn_1 * qn_2);
+}
+
 void FastText::ngramVectors(std::string word) {
   std::vector<int32_t> ngrams;
   std::vector<std::string> substrings;

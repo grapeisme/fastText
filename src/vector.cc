@@ -89,6 +89,14 @@ void Vector::addRow(const QMatrix& A, int64_t i) {
   A.addToVector(*this, i);
 }
 
+real Vector::dot(const Vector& A) {
+  assert(A.m_ == m_);
+  real d = 0.0;
+  for (int64_t i = 0; i < m_; i++)
+      d += data_[i] * A[i];
+  return d;
+}
+
 void Vector::mul(const Matrix& A, const Vector& vec) {
   assert(A.m_ == m_);
   assert(A.n_ == vec.m_);
